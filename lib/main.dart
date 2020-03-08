@@ -2,7 +2,9 @@ import 'package:bytebankorigin/screens/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(bytebankApp());
+void main() {
+  runApp(bytebankApp());
+}
 
 class bytebankApp extends StatelessWidget {
   // This widget is the root of your application.
