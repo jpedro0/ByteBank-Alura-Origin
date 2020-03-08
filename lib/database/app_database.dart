@@ -6,12 +6,17 @@ Future<Database> createDatabase() {
   return getDatabasesPath().then((dbPath) {
     final String path = join(dbPath, 'bytebank.db');
 
-    return openDatabase(path, onCreate: (db, version) {
-      db.execute('CREATE TABLE contacts('
-          'id INTEGER PRIMARY KEY, '
-          'name TEXT, '
-          'account_number INTERGER)');
-    }, version: 1);
+    return openDatabase(
+      path,
+      onCreate: (db, version) {
+        db.execute('CREATE TABLE contacts('
+            'id INTEGER PRIMARY KEY, '
+            'name TEXT, '
+            'account_number INTERGER)');
+      },
+      version: 1,
+//      onDowngrade: onDatabaseDowngradeDelete,
+    );
   });
 }
 
