@@ -3,11 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(bytebankApp());
+  runApp(BytebankApp());
 }
 
-class bytebankApp extends StatelessWidget {
-  // This widget is the root of your application.
+class BytebankApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(

@@ -1,4 +1,4 @@
-import 'package:bytebankorigin/database/app_database.dart';
+import 'package:bytebankorigin/database/dao/contact_dao.dart';
 import 'package:bytebankorigin/models/Contact.dart';
 import 'package:bytebankorigin/screens/contact/form.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +13,9 @@ class ContectsList extends StatefulWidget {
 }
 
 class ContectsListState extends State<ContectsList>{
+
+  final ContactDao _contactDao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +24,7 @@ class ContectsListState extends State<ContectsList>{
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: findAll(),
+        future: _contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
