@@ -1,6 +1,7 @@
 import 'package:bytebankorigin/database/dao/contact_dao.dart';
 import 'package:bytebankorigin/models/Contact.dart';
 import 'package:bytebankorigin/screens/contact/form.dart';
+import 'package:bytebankorigin/widgets/progress.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -30,16 +31,7 @@ class ContectsListState extends State<ContectsList>{
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading'),
-                  ],
-                ),
-              );
+              return Progress();
               break;
             case ConnectionState.active:
               break;
@@ -54,7 +46,7 @@ class ContectsListState extends State<ContectsList>{
               );
               break;
           }
-          return Text('data');
+          return Text('Error');
         },
       ),
       floatingActionButton: FloatingActionButton(
