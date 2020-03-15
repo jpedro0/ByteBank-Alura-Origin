@@ -1,6 +1,7 @@
 import 'package:bytebankorigin/http/webclient.dart';
 import 'package:bytebankorigin/models/Contact.dart';
 import 'package:bytebankorigin/models/transaction.dart';
+import 'package:bytebankorigin/widgets/centered_message.dart';
 import 'package:bytebankorigin/widgets/progress.dart';
 import 'package:flutter/material.dart';
 
@@ -16,45 +17,53 @@ class TransactionsList extends StatelessWidget {
       body: FutureBuilder<List<Transaction>>(
         future: findAll(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch(snapshot.connectionState) {
-              case ConnectionState.none:
-                break;
-              case ConnectionState.waiting:
-                return Progress();
-                break;
-              case ConnectionState.active:
-                break;
-              case ConnectionState.done:
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Progress();
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              if (snapshot.hasData) {
                 final List<Transaction> transactions = snapshot.data;
-                return ListView.builder(
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    final Transaction transaction = transactions[index];
-                    return Card(
-                      child: ListTile(
-                        leading: Icon(Icons.monetization_on),
-                        title: Text(
-                          transaction.value.toString(),
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
+                if (transactions.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      final Transaction transaction = transactions[index];
+                      return Card(
+                        child: ListTile(
+                          leading: Icon(Icons.monetization_on),
+                          title: Text(
+                            transaction.value.toString(),
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            transaction.contact.accountNumber.toString(),
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
                           ),
                         ),
-                        subtitle: Text(
-                          transaction.contact.accountNumber.toString(),
-                          style: TextStyle(
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-                break;
-            }
+                      );
+                    },
+                  );
+                }
+              }
+              return CenteredMessage(
+                'No transactions found',
+                icon: Icons.warning,
+              );
+              break;
+          }
 
-            return Text('Error');
-          },
+          return CenteredMessage('Unkown error');
+        },
       ),
     );
   }
