@@ -26,9 +26,9 @@ class LoggingInterceptor implements InterceptorContract {
 }
 
 Future<List<Transaction>> findAll() async {
-  Response response = await _getHttpClient();
   final List<Transaction> transactions = List();
-  for (Map<String, dynamic> transactionsJSON in jsonDecode(response.body)) {
+  for (Map<String, dynamic> transactionsJSON
+      in jsonDecode(await _getTransactions())) {
     final Map<String, dynamic> contactJSON = transactionsJSON['contact'];
     transactions.add(
       Transaction(
@@ -40,10 +40,11 @@ Future<List<Transaction>> findAll() async {
   return transactions;
 }
 
-Future<Response> _getHttpClient() async {
+Future<String> _getTransactions() async {
   Client client =
-  HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
-  final Response response =
-      await client.get('http://192.168.0.57:8080/transactions');
-  return response;
+      HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
+  return await client
+      .get('http://192.168.0.57:8080/transactions')
+      .timeout(Duration(seconds: 5))
+      .then((item) => item.body);
 }
