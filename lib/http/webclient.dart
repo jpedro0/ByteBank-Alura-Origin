@@ -25,26 +25,60 @@ class LoggingInterceptor implements InterceptorContract {
   }
 }
 
+final Client client =
+    HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
+
+const String baseUrl = 'http://192.168.0.57:8080/transactions';
+
+Future<Transaction> save(Transaction transaction) async {
+  final Response response = await client
+      .post(
+        baseUrl,
+        headers: {'Content-type': 'application/json', 'password': '1000'},
+        body: jsonEncode(_toTransactionMap(transaction)),
+      )
+      .timeout(Duration(seconds: 5));
+  final Map<String, dynamic> transactionsJson = jsonDecode(response.body);
+
+  return _toTransaction(transactionsJson, transactionsJson['contact']);
+}
+
 Future<List<Transaction>> findAll() async {
+  final Response response =
+      await client.get(baseUrl).timeout(Duration(seconds: 5));
+
   final List<Transaction> transactions = List();
-  for (Map<String, dynamic> transactionsJSON
-      in jsonDecode(await _getTransactions())) {
-    final Map<String, dynamic> contactJSON = transactionsJSON['contact'];
+
+  for (Map<String, dynamic> transactionsJson in jsonDecode(response.body)) {
     transactions.add(
-      Transaction(
-        transactionsJSON['value'],
-        Contact(0, contactJSON['name'], contactJSON['accountNumber']),
+      _toTransaction(
+        transactionsJson,
+        transactionsJson['contact'],
       ),
     );
   }
   return transactions;
 }
 
-Future<String> _getTransactions() async {
-  Client client =
-      HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
-  return await client
-      .get('http://192.168.0.57:8080/transactions')
-      .timeout(Duration(seconds: 5))
-      .then((item) => item.body);
+Map<String, dynamic> _toTransactionMap(Transaction transaction) {
+  final Contact contact = transaction.contact;
+  return {
+    'value': transaction.value,
+    'contact': {
+      'name': contact.name,
+      'accountNumber': contact.accountNumber,
+    }
+  };
+}
+
+Transaction _toTransaction(
+    Map<String, dynamic> transactionsJson, Map<String, dynamic> contactJson) {
+  return Transaction(
+    transactionsJson['value'],
+    Contact(
+      0,
+      contactJson['name'],
+      contactJson['accountNumber'],
+    ),
+  );
 }
