@@ -1,6 +1,7 @@
 import 'package:bytebankorigin/database/dao/contact_dao.dart';
 import 'package:bytebankorigin/models/Contact.dart';
 import 'package:bytebankorigin/screens/contact/form.dart';
+import 'package:bytebankorigin/screens/transaction_form.dart';
 import 'package:bytebankorigin/widgets/centered_message.dart';
 import 'package:bytebankorigin/widgets/progress.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,11 +12,9 @@ class ContectsList extends StatefulWidget {
   State<StatefulWidget> createState() {
     return ContectsListState();
   }
-
 }
 
-class ContectsListState extends State<ContectsList>{
-
+class ContectsListState extends State<ContectsList> {
   final ContactDao _contactDao = ContactDao();
 
   @override
@@ -42,7 +41,16 @@ class ContectsListState extends State<ContectsList>{
                 itemCount: contacts.length,
                 itemBuilder: (context, index) {
                   final contact = contacts[index];
-                  return _ContactItem(contact);
+                  return _ContactItem(
+                    contact,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TransactionForm(contact),
+                        ),
+                      );
+                    },
+                  );
                 },
               );
               break;
@@ -62,18 +70,22 @@ class ContectsListState extends State<ContectsList>{
       ),
     );
   }
-
 }
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onClick;
 
-  _ContactItem(this.contact);
+  _ContactItem(
+    this.contact, {
+    @required this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           contact.name,
           style: TextStyle(fontSize: 24.0),
