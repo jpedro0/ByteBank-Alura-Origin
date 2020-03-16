@@ -4,11 +4,11 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 class TransactionWebClient {
-  Future<Transaction> save(Transaction transaction) async {
+  Future<Transaction> save(Transaction transaction, String password) async {
     final Response response = await client
         .post(
           baseUrl,
-          headers: {'Content-type': 'application/json', 'password': '1000'},
+          headers: {'Content-type': 'application/json', 'password': password},
           body: jsonEncode(transaction.toJson()),
         )
         .timeout(Duration(seconds: 5));
