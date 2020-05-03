@@ -13,8 +13,20 @@ class TransactionWebClient {
         )
         .timeout(Duration(seconds: 5));
 
-    return Transaction.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return Transaction.fromJson(jsonDecode(response.body));
+    }
+
+    _throwHttpError(response.statusCode);
   }
+
+  void _throwHttpError(int statusCode) =>
+      throw Exception(_statusCodeResponses[statusCode]);
+
+  static final Map<int, String> _statusCodeResponses = {
+    400: 'there was an error submitting transaction',
+    401: 'authentication failed'
+  };
 
   Future<List<Transaction>> findAll() async {
     final Response response =
