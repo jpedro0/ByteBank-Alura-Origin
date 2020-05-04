@@ -16,12 +16,20 @@ class TransactionWebClient {
       return Transaction.fromJson(jsonDecode(response.body));
     }
 
-    HttpException(_statusCodeResponses[response.statusCode]);
+    HttpException(_getMessage(response.statusCode));
+  }
+
+  String _getMessage(int statusCode){
+    if(_statusCodeResponses.containsKey(statusCode)){
+      return _statusCodeResponses[statusCode];
+    }
+    return 'Unknown error';
   }
 
   static final Map<int, String> _statusCodeResponses = {
     400: 'there was an error submitting transaction',
-    401: 'authentication failed'
+    401: 'authentication failed',
+    409: 'transaction always exists'
   };
 
   Future<List<Transaction>> findAll() async {
