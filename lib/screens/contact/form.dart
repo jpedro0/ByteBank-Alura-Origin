@@ -3,15 +3,20 @@ import 'package:bytebankorigin/models/Contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
+  final ContactDao contactDao;
+
+  ContactForm({@required this.contactDao});
   @override
-  State<StatefulWidget> createState() => ContactFormState();
+  State<StatefulWidget> createState() => ContactFormState(contactDao: contactDao);
 }
 
 class ContactFormState extends State<ContactForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountNumberController =
       TextEditingController();
-  final ContactDao _contactDao = ContactDao();
+  final ContactDao contactDao;
+
+  ContactFormState({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +63,7 @@ class ContactFormState extends State<ContactForm> {
                     if (name != null && accountNumber != null) {
                       final Contact newContact =
                           Contact(0, name, accountNumber);
-                      _contactDao.save(newContact).then(
-                        (id) => Navigator.pop(context),
-                      );
+                        _save(newContact, context);
                     }
                   },
                 ),
@@ -70,5 +73,10 @@ class ContactFormState extends State<ContactForm> {
         ),
       ),
     );
+  }
+
+  void _save(Contact newContact, BuildContext context) async {
+    await contactDao.save(newContact);
+    Navigator.pop(context);
   }
 }

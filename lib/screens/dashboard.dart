@@ -1,8 +1,13 @@
+import 'package:bytebankorigin/database/dao/contact_dao.dart';
 import 'package:bytebankorigin/screens/contact/list.dart';
 import 'package:bytebankorigin/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
+  final ContactDao contactDao;
+
+  Dashboard({@required this.contactDao});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +56,7 @@ class Dashboard extends StatelessWidget {
 
   void _showContactsList(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ContectsList(),
+      builder: (context) => ContectsList(contactDao: contactDao),
     ));
   }
 
@@ -63,12 +68,12 @@ class Dashboard extends StatelessWidget {
 }
 
 class FeatureItem extends StatelessWidget {
-  final IconData _icone;
-  final String _name;
+  final IconData icone;
+  final String name;
   final Function onClick;
 
-  FeatureItem(this._icone, this._name, {@required this.onClick})
-      : assert(_icone != null), assert(onClick != null);
+  FeatureItem(this.icone, this.name, {@required this.onClick})
+      : assert(icone != null), assert(onClick != null);
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +92,12 @@ class FeatureItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Icon(
-                  _icone,
+                  icone,
                   color: Colors.white,
                   size: 24.0,
                 ),
                 Text(
-                  _name,
+                  name,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,

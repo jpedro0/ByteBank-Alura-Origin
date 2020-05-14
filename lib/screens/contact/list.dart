@@ -8,14 +8,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ContectsList extends StatefulWidget {
+
+  final ContactDao contactDao;
+
+  ContectsList({@required this.contactDao});
+
   @override
   State<StatefulWidget> createState() {
-    return ContectsListState();
+    return ContectsListState(contactDao: contactDao);
   }
 }
 
 class ContectsListState extends State<ContectsList> {
-  final ContactDao _contactDao = ContactDao();
+  final ContactDao contactDao;
+
+  ContectsListState({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,7 @@ class ContectsListState extends State<ContectsList> {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: _contactDao.findAll(),
+        future: contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -62,7 +69,7 @@ class ContectsListState extends State<ContectsList> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ContactForm(),
+              builder: (context) => ContactForm(contactDao: contactDao,),
             ),
           );
         },
