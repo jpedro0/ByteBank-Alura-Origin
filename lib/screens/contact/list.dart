@@ -2,6 +2,7 @@ import 'package:bytebankorigin/database/dao/contact_dao.dart';
 import 'package:bytebankorigin/models/Contact.dart';
 import 'package:bytebankorigin/screens/contact/form.dart';
 import 'package:bytebankorigin/screens/transaction_form.dart';
+import 'package:bytebankorigin/widgets/app_dependencies.dart';
 import 'package:bytebankorigin/widgets/centered_message.dart';
 import 'package:bytebankorigin/widgets/progress.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,30 +10,24 @@ import 'package:flutter/material.dart';
 
 class ContectsList extends StatefulWidget {
 
-  final ContactDao contactDao;
-
-  ContectsList({@required this.contactDao});
-
   @override
   State<StatefulWidget> createState() {
-    return ContectsListState(contactDao: contactDao);
+    return ContectsListState();
   }
 }
 
 class ContectsListState extends State<ContectsList> {
-  final ContactDao contactDao;
-
-  ContectsListState({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Contects'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: contactDao.findAll(),
+        future: dependencies.contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -69,7 +64,7 @@ class ContectsListState extends State<ContectsList> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ContactForm(contactDao: contactDao,),
+              builder: (context) => ContactForm(),
             ),
           );
         },

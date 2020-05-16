@@ -35,12 +35,12 @@ void main() {
     expect(contactForm, findsOneWidget);
 
     final nameTextField = find.byWidgetPredicate((widget) =>
-        textFieldMatcher(widget, 'Full name'));
+        textFieldByLabelMatcher(widget, 'Full name'));
     expect(nameTextField, findsOneWidget);
     await tester.enterText(nameTextField, 'Alex');
 
     final accountNameTextField = find.byWidgetPredicate((widget) =>
-        textFieldMatcher(widget, 'Account number'));
+        textFieldByLabelMatcher(widget, 'Account number'));
     expect(accountNameTextField, findsOneWidget);
     await tester.enterText(accountNameTextField, '1000');
 
